@@ -1,33 +1,39 @@
 "use client";
 
-import { addTodolist } from "@/lib/actions/todo.action";
+import { addTodolist, updateTodoById } from "@/lib/actions/todo.action";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface Props {
   title: string;
+  description?: string;
+}
+
+interface Params {
+  id: string;
+  title: string;
   description: string;
 }
 
-const TodoForm = () => {
+const TodoForm = ({ id, title, description }: Params) => {
   const [formData, setFormData] = useState<Props>({
-    title: "",
-    description: "",
+    title: title || "",
+    description: description || "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     setIsSubmitting(true);
-    
-    await addTodolist(formData);
-    
-    setFormData({
-      title: "",
-      description: "",
-    });
+
+    if (id) {
+      await updateTodoById(id, formData);
+    } else {
+      await addTodolist(formData);
+    }
 
     setIsSubmitting(false);
     router.push(`/`);
@@ -75,7 +81,7 @@ const TodoForm = () => {
               : "bg-slate-400 hover:bg-slate-500 hover:text-white cursor-pointer"
           } flex justify-center w-full mt-2 p-2 rounded-md`}
         >
-          <p className="font-medium text-lg">Create</p>
+          <p className="font-medium text-lg">{`${id ? "Edit" : "Create"}`}</p>
         </button>
       </div>
     </form>

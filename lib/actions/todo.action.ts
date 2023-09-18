@@ -1,11 +1,12 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import Todo from "../models/todo.model";
 import { connectToDB } from "../mongoose";
 
 interface Props {
   title: string;
-  description: string;
+  description?: string;
 }
 
 export const addTodolist = async ({ title, description }: Props) => {
@@ -16,6 +17,7 @@ export const addTodolist = async ({ title, description }: Props) => {
       title,
       description,
     });
+    revalidatePath(`/`);
   } catch (error: any) {
     throw new Error(`Failed to create todo: ${error.message}`);
   }
@@ -34,7 +36,6 @@ export const fetchTodos = async () => {
 };
 
 export const fetchTodoById = async (todoId: string) => {
-  
   try {
     connectToDB();
 
@@ -43,5 +44,27 @@ export const fetchTodoById = async (todoId: string) => {
     return todo;
   } catch (error: any) {
     throw new Error(`Failed to fetch todo: ${error.message}`);
+  }
+};
+
+export const deleteTodoById = async (todoId: string) => {
+  try {
+    connectToDB();
+
+    await Todo.findByIdAndDelete(todoId);
+    revalidatePath(`/`);
+  } catch (error: any) {
+    throw new Error(`Failed to delete todo: ${error.message}`);
+  }
+};
+
+export const updateTodoById = async (todoId: string, todo: Props) => {
+  try {
+    connectToDB();
+
+    await Todo.findByIdAndUpdate(todoId, todo);
+    revalidatePath(`/`);
+  } catch (error: any) {
+    throw new Error(`Failed to delete todo: ${error.message}`);
   }
 };

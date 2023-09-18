@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import Button from "../shared/Button";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { deleteTodoById } from "@/lib/actions/todo.action";
 
 interface Props {
   id: string;
@@ -12,21 +13,34 @@ interface Props {
 }
 
 const TodoItem = ({ id, title, description, createdAt }: Props) => {
+  const router = useRouter();
   const params = useParams();
 
-  const handleEdit = (id: string) => {
-    console.log(`edit:${id}`);
-  };
-  const handleDelete = (id: string) => {
-    console.log(`delete:${id}`);
+  const handleDelete = async (id: string) => {
+    await deleteTodoById(id);
+    router.push(`/`);
   };
 
   return (
-    <section className="md:min-w-[560px] border border-black rounded-md p-4 mt-4 bg-gray-200">
+    <section className="flex flex-col w-full md:min-w-[560px] border border-black rounded-md p-4 my-4 mx-2 bg-gray-200">
       {params?.id ? (
         <>
-          <p className="text-gray-800 font-bold text-2xl capitalize">{title}</p>
-          <p className="text-gray-500 font-semibold text-lg text-ellipsis">
+          <p
+            className={`text-gray-800 font-bold text-2xl capitalize text-ellipsis ${
+              title?.split(" ").every((value) => value.length < 30)
+                ? "break-words"
+                : " break-all"
+            }`}
+          >
+            {title}
+          </p>
+          <p
+            className={`text-gray-500 font-semibold text-lg ${
+              description?.split(" ").every((value) => value.length < 42)
+                ? "break-words"
+                : " break-all"
+            }`}
+          >
             {description}
           </p>
           <div className="flex justify-between">
@@ -35,7 +49,7 @@ const TodoItem = ({ id, title, description, createdAt }: Props) => {
               <Button
                 type="button"
                 title="Edit"
-                onClickBtn={() => handleEdit(params.id.toString())}
+                onClickBtn={() => router.push(`/edit-todo/${id}`)}
               />
               <Button
                 type="button"
@@ -48,11 +62,23 @@ const TodoItem = ({ id, title, description, createdAt }: Props) => {
       ) : (
         <>
           <Link href={`/todo/${id}`}>
-            <p className="text-gray-800 font-bold text-2xl capitalize">
+            <p
+              className={`text-gray-800 font-bold text-2xl capitalize hover:underline text-ellipsis ${
+                title?.split(" ").every((value) => value.length < 30)
+                  ? "break-words"
+                  : " break-all"
+              }`}
+            >
               {title}
             </p>
           </Link>
-          <p className="text-gray-500 font-semibold text-lg text-ellipsis">
+          <p
+            className={`text-gray-500 font-semibold text-lg ${
+              description?.split(" ").every((value) => value.length < 42)
+                ? "break-words"
+                : " break-all"
+            }`}
+          >
             {description}
           </p>
         </>

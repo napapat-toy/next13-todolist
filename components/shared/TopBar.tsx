@@ -1,14 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 const TopBar = () => {
   const path = usePathname();
-  const router = useRouter();
 
   return (
-    <nav className="flex justify-between items-center p-4 bg-slate-400">
+    <nav className="flex justify-between items-center p-4 bg-slate-400 sticky top-0 left-0">
       <Link href={`/`}>
         <h1 className="font-medium text-4xl ml-4 text-white cursor-pointer">
           Todolist App

@@ -5,12 +5,12 @@ const Page = async ({ params }: { params: { id: string } }) => {
   const result = await fetchTodoById(params.id);
 
   return (
-    <section>
+    <section className="flex">
       <TodoItem
-        id={result._id.toString()}
-        title={result.title}
-        description={result.description}
-        createdAt={result.createdAt}
+        id={result?._id.toString()}
+        title={result?.title}
+        description={result?.description}
+        createdAt={result?.createdAt}
       />
     </section>
   );

@@ -5,9 +5,9 @@ export default async function Home() {
   const result = await fetchTodos();
 
   return (
-    <main className="flex flex-col items-center justify-center p-4 mt-4">
+    <section className="flex flex-col items-center justify-center p-4">
       {result.length === 0 ? (
-        <p className="no-result">No threads found</p>
+        <p className="no-result">No todos found</p>
       ) : (
         <>
           {result.map((todo) => (
@@ -21,6 +21,6 @@ export default async function Home() {
           ))}
         </>
       )}
-    </main>
+    </section>
   );
 }
