@@ -10,9 +10,9 @@ interface Props {
 }
 
 interface Params {
-  id: string;
-  title: string;
-  description: string;
+  id?: string;
+  title?: string;
+  description?: string;
 }
 
 const TodoForm = ({ id, title, description }: Params) => {
